@@ -1,0 +1,153 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: netbox
+  namespace: netbox
+  labels:
+    app: netbox
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: netbox
+    spec:
+      containers:
+      - name: netbox
+        image: artsn00p/netbox-docker
+        ports:
+        - containerPort: 8888
+        env:
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              key: ALLOWED_HOSTS
+              name: netbox-netbox-env
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: DB_HOST
+              name: netbox-netbox-env
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: DB_NAME
+              name: netbox-netbox-env
+        - name: DB_PASS
+          valueFrom:
+            configMapKeyRef:
+              key: DB_PASS
+              name: netbox-netbox-env
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: DB_USER
+              name: netbox-netbox-env
+        - name: EMAIL_FROM
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_FROM
+              name: netbox-netbox-env
+        - name: EMAIL_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_PASSWORD
+              name: netbox-netbox-env
+        - name: EMAIL_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_PORT
+              name: netbox-netbox-env
+        - name: EMAIL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_SERVER
+              name: netbox-netbox-env
+        - name: EMAIL_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_TIMEOUT
+              name: netbox-netbox-env
+        - name: EMAIL_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_USERNAME
+              name: netbox-netbox-env
+        - name: NETBOX_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: NETBOX_PASSWORD
+              name: netbox-netbox-env
+        - name: NETBOX_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: NETBOX_USERNAME
+              name: netbox-netbox-env
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: SECRET_KEY
+              name: netbox-netbox-env
+        - name: SUPERUSER_API_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              key: SUPERUSER_API_TOKEN
+              name: netbox-netbox-env
+        - name: SUPERUSER_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: SUPERUSER_EMAIL
+              name: netbox-netbox-env
+        - name: SUPERUSER_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: SUPERUSER_NAME
+              name: netbox-netbox-env
+        - name: SUPERUSER_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: SUPERUSER_PASSWORD
+              name: netbox-netbox-env
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox
+  namespace: netbox
+  labels:
+    app: netbox
+spec:
+  ports:
+  - name: nbox
+    port: 8888
+    targetPort: 8888
+  selector:
+    app: netbox
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-netbox-env
+  namespace: netbox
+data:
+  ALLOWED_HOSTS: '*'
+  DB_HOST: postgres
+  DB_NAME: netbox
+  DB_PASS: netbox
+  DB_USER: netbox
+  EMAIL_FROM: netbox@domain.com
+  EMAIL_PASSWORD: netbox
+  EMAIL_PORT: "25"
+  EMAIL_SERVER: localhost
+  EMAIL_TIMEOUT: "10"
+  EMAIL_USERNAME: netbox
+  NETBOX_PASSWORD: guest
+  NETBOX_USERNAME: guest
+  SECRET_KEY: netbox
+  SUPERUSER_API_TOKEN: 0123456789abcdef0123456789abcdef01234567
+  SUPERUSER_EMAIL: admin@domain.com
+  SUPERUSER_NAME: admin
+  SUPERUSER_PASSWORD: admin

@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  name: netbox-ingress
+  namespace: netbox
+spec:
+  rules:
+    - host: netbox
+      http:
+        paths:
+          - backend:
+              serviceName: netbox
+              servicePort: 80
+    - host: netbox.xentaurs.com
+      http:
+        paths:
+          - backend:
+              serviceName: netbox
+              servicePort: 80
