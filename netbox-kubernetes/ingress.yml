@@ -13,7 +13,7 @@ spec:
           - backend:
               serviceName: netbox
               servicePort: 80
-    - host: netbox.xentaurs.com
+    - host: netbox.domain.com
       http:
         paths:
           - backend:
